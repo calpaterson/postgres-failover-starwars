@@ -1,0 +1,10 @@
+---
+- hosts: all
+  sudo: yes
+  gather_facts: no
+  tasks:
+    - name: install postgres tools
+      apt: name={{ item }} state=installed
+      with_items:
+        - postgresql
+        - repmgr
