@@ -2,7 +2,23 @@
 - hosts: all
   sudo: yes
   gather_facts: no
+  handlers:
+    - name: restart postgres
+      service: name=postgresql state=restarted
   tasks:
+    - name: place hosts file
+      copy: src=hosts dest=/etc/hosts
+
+    - name: place postgresql.conf
+      copy: src=postgresql.conf dest=/etc/postgresql/9.3/main/postgresql.conf
+      notify:
+        - restart postgres
+
+    - name: place pg_hba.conf
+      copy: src=pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+      notify:
+        - restart postgres
+
     - name: install postgres tools
       apt: name={{ item }} state=installed
       with_items:
